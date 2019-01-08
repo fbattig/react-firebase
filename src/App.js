@@ -2,6 +2,20 @@ import React, { Component } from 'react';
 
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      title: '',
+      body:''
+    }
+
+  }
+
+  onHandleChange = (e) => {
+    this.setState({[e.target.name]: e.target.value })
+    
+}
+
   render() {
     return (
       <div className='container-fluid' >
@@ -15,6 +29,7 @@ class App extends Component {
                   className='form-control no-border'
                   placeholder='Title....'
                   required 
+                onChange={this.onHandleChange}
                 />
               </div>
               <div className='form-group'>
@@ -24,10 +39,11 @@ class App extends Component {
                   className='form-control no-border'
                   placeholder='Body....'
                   required 
+                  onChange={this.onHandleChange}
                 />
               </div>
               <div className='form-group'>
-                <button className='btn btn-primary col-sm-12' />
+                <button className='btn btn-primary col-sm-12' >Save</button>
               </div>
 
             </form>

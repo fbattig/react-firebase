@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-
+import { database } from './firebase';
 
 class App extends Component {
   constructor(props) {
@@ -13,15 +13,27 @@ class App extends Component {
 
   onHandleChange = (e) => {
     this.setState({[e.target.name]: e.target.value })
-    
-}
+  }
+  
+  onSubmit = (e) => {
+    e.preventDefault();
+    const note = {
+      title: this.state.title,
+      body: this.state.body
+     }
+    database.push(note);
+    this.setState({
+      title: '',
+      body:''
+    })
+  }
 
   render() {
     return (
       <div className='container-fluid' >
         <div className='row'>
           <div className='col-sm-6 col-sm-offset-3'>
-            <form>
+            <form onSubmit={this.onSubmit}>
               <div className='form-group'>
                 <input
                   type='text'
@@ -29,7 +41,8 @@ class App extends Component {
                   className='form-control no-border'
                   placeholder='Title....'
                   required 
-                onChange={this.onHandleChange}
+                  onChange={this.onHandleChange}
+                  value={this.state.title}
                 />
               </div>
               <div className='form-group'>
@@ -40,6 +53,7 @@ class App extends Component {
                   placeholder='Body....'
                   required 
                   onChange={this.onHandleChange}
+                  value={this.state.body}
                 />
               </div>
               <div className='form-group'>

@@ -1,31 +1,55 @@
 import React, { Component } from 'react';
 import { database } from './firebase';
+import _ from 'lodash';
 
 class App extends Component {
+
   constructor(props) {
     super(props)
     this.state = {
       title: '',
-      body:''
-    }
+      body: '',
+      notes: {}
+    };
+
+    this.onHandleChange = this.onHandleChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
 
   }
 
-  onHandleChange = (e) => {
+  onHandleChange(e) {
     this.setState({[e.target.name]: e.target.value })
   }
   
-  onSubmit = (e) => {
+  onSubmit(e){
     e.preventDefault();
     const note = {
       title: this.state.title,
       body: this.state.body
-     }
+    };
     database.push(note);
+    
     this.setState({
       title: '',
-      body:''
+      body: '',
+     
     })
+  }
+  
+  componentDidMount() {
+    database.on('value', (snapshot) => {
+      this.setState({notes: snapshot.val()})
+    })
+  }
+
+  renderNotes = () => {
+    return (_.map(this.state.notes, (note, key) =>  (
+        <div key={key}>
+          <h3>{note.title}</h3>
+          <h4>{note.body}</h4>
+        </div>
+      )
+    ))
   }
 
   render() {
@@ -59,8 +83,9 @@ class App extends Component {
               <div className='form-group'>
                 <button className='btn btn-primary col-sm-12' >Save</button>
               </div>
-
+              {this.renderNotes()}
             </form>
+           
           </div>
         </div>  
       </div>
